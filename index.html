@@ -444,6 +444,12 @@
         and paste the Markdown into the <strong>#bridge-bug-tracker</strong> channel.
       </p>
 
+      <p class="procedure-warning">
+        <strong>Suspect a hardware issue?</strong> Do not fill out this form. Reach out to
+        <a href="https://discord.gg/pJCWPc2Gzu" target="_blank" rel="noopener noreferrer">Wingflex Support on Discord</a>
+        for direct assistance instead.
+      </p>
+
       <h2>Check for an existing report first</h2>
       <p>
         Before filing, search the existing issues in the
@@ -503,7 +509,7 @@
                   id="title"
                   name="title"
                   type="text"
-                  placeholder="[MSFS 2024] FCU Combo Cube displays do not blank after power-off"
+                  placeholder="[MSFS 2024] Combo Cube displays do not blank after power-off"
                   required
                 />
                 <p class="hint">
@@ -546,18 +552,20 @@
                 <label for="product" class="required">Product</label>
                 <select id="product" name="product" required>
                   <option value="">Select product…</option>
-                  <option>A320 Overhead Panel</option>
                   <option>FCU Cube</option>
-                  <option>FCU Combo Cube</option>
+                  <option>RMP Cube</option>
                   <option>EFIS Cube</option>
-                  <option>RMP</option>
-                  <option>EFIS / RMP</option>
-                  <option>CDU / MCDU</option>
+                  <option>Combo Cube (EFIS+FCU+RMP)</option>
+                  <option>A320 CDU</option>
+                  <option>737 CDU/FMC</option>
+                  <option>777 CDU/FMC</option>
+                  <option>A320 Overhead Panel</option>
+                  <option>DP320</option>
+                  <option>GMP (Gear)</option>
                   <option>DAP-500</option>
-                  <option>Wings Bridge</option>
-                  <option value="Custom">Custom…</option>
+                  <option>ECP(ECAM)</option>
+                  <option>A3N Tiller</option>
                 </select>
-                <input id="customProduct" class="custom-field" type="text" placeholder="Enter custom product" />
               </div>
 
               <div class="field">
@@ -824,7 +832,6 @@
     });
 
     const customMappings = [
-      ["product", "customProduct"],
       ["firmwareVersion", "customFirmwareVersion"],
       ["simulator", "customSimulator"],
       ["aircraft", "customAircraft"]
@@ -907,7 +914,7 @@
       const username = cleanText(document.getElementById("username").value);
       const reportDate = reportDateInput.value.trim();
       const status = document.getElementById("status").value.trim();
-      const product = selectedValue("product", "customProduct");
+      const product = document.getElementById("product").value.trim();
       const bridgeVersion = cleanText(document.getElementById("bridgeVersion").value);
       const firmwareVersion = selectedValue("firmwareVersion", "customFirmwareVersion");
       const simulator = selectedValue("simulator", "customSimulator");
