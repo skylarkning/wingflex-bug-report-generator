@@ -7,17 +7,17 @@
   <title>Wingflex Bug Report Generator</title>
   <style>
     :root {
-      --bg: #0b1020;
-      --panel: rgba(18, 26, 48, 0.92);
-      --panel-2: #121a30;
-      --text: #f3f6ff;
-      --muted: #9aa8c7;
-      --accent: #4da3ff;
-      --accent-2: #76c3ff;
-      --success: #41d17d;
-      --danger: #ff6b6b;
-      --border: rgba(255, 255, 255, 0.12);
-      --shadow: 0 22px 70px rgba(0, 0, 0, 0.36);
+      --bg: #f2f6fc;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-2: #f7f9fd;
+      --text: #17233b;
+      --muted: #5d6d85;
+      --accent: #1769e0;
+      --accent-2: #3185f5;
+      --success: #16804b;
+      --danger: #c73535;
+      --border: rgba(23, 35, 59, 0.14);
+      --shadow: 0 22px 60px rgba(43, 67, 101, 0.14);
       --radius: 18px;
     }
 
@@ -29,15 +29,19 @@
       scroll-behavior: smooth;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 10% 10%, rgba(77, 163, 255, 0.18), transparent 32%),
-        radial-gradient(circle at 90% 15%, rgba(118, 195, 255, 0.12), transparent 30%),
-        linear-gradient(145deg, #070b16, var(--bg));
+        radial-gradient(circle at 10% 10%, rgba(49, 133, 245, 0.14), transparent 32%),
+        radial-gradient(circle at 90% 15%, rgba(114, 180, 255, 0.16), transparent 30%),
+        linear-gradient(145deg, #fbfdff, var(--bg));
     }
 
     button,
@@ -51,6 +55,52 @@
       width: min(1440px, calc(100% - 32px));
       margin: 0 auto;
       padding: 34px 0 48px;
+    }
+
+    .procedure-shell {
+      width: min(760px, calc(100% - 32px));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 56px 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .procedure-card {
+      width: 100%;
+      padding: clamp(24px, 5vw, 42px);
+    }
+
+    .procedure-card h1 {
+      margin-bottom: 14px;
+    }
+
+    .procedure-card h2 {
+      margin: 28px 0 10px;
+      font-size: 1.05rem;
+    }
+
+    .procedure-card p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .procedure-card a {
+      color: var(--accent);
+      font-weight: 750;
+    }
+
+    .procedure-warning {
+      margin: 22px 0;
+      padding: 16px 18px;
+      color: #653c00 !important;
+      background: #fff7df;
+      border: 1px solid #e8c86f;
+      border-radius: 12px;
+    }
+
+    .procedure-action {
+      margin-top: 26px;
     }
 
     .hero {
@@ -96,9 +146,9 @@
     }
 
     code {
-      color: #dff2ff;
-      background: rgba(77, 163, 255, 0.1);
-      border: 1px solid rgba(77, 163, 255, 0.2);
+      color: #1256ad;
+      background: rgba(49, 133, 245, 0.09);
+      border: 1px solid rgba(49, 133, 245, 0.2);
       border-radius: 6px;
       padding: 2px 5px;
       font-size: 0.9em;
@@ -180,7 +230,7 @@
     label {
       font-weight: 720;
       font-size: 0.88rem;
-      color: #dfe7fb;
+      color: var(--text);
     }
 
     .required::after {
@@ -195,7 +245,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       color: var(--text);
-      background: rgba(7, 12, 25, 0.72);
+      background: #ffffff;
       padding: 12px 13px;
       outline: none;
       transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
@@ -248,6 +298,10 @@
       font-weight: 800;
       cursor: pointer;
       transition: transform 0.16s ease, filter 0.16s ease, opacity 0.16s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .button:hover {
@@ -260,19 +314,19 @@
     }
 
     .button.primary {
-      color: #06111e;
+      color: #ffffff;
       background: linear-gradient(135deg, var(--accent-2), var(--accent));
     }
 
     .button.secondary {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.08);
+      background: #f5f7fb;
       border: 1px solid var(--border);
     }
 
     .button.success {
-      color: #05170e;
-      background: linear-gradient(135deg, #67e8a0, var(--success));
+      color: #ffffff;
+      background: linear-gradient(135deg, #21a765, var(--success));
     }
 
     .preview-header {
@@ -282,7 +336,7 @@
       align-items: center;
       padding: 18px 20px;
       border-bottom: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.025);
+      background: var(--panel-2);
     }
 
     .preview-header h2 {
@@ -306,8 +360,8 @@
       padding: 22px;
       white-space: pre-wrap;
       word-break: break-word;
-      color: #d9e6ff;
-      background: rgba(5, 9, 18, 0.66);
+      color: #26354f;
+      background: #fbfcfe;
       font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
       font-size: 0.86rem;
       line-height: 1.58;
@@ -364,19 +418,44 @@
   </style>
 </head>
 <body>
-  <main class="app-shell">
+  <main id="procedurePage" class="procedure-shell">
+    <section class="card procedure-card" aria-labelledby="procedureTitle">
+      <h1 id="procedureTitle">Read before you proceed</h1>
+      <p>
+        Complete the form after acknowledging these instructions, then copy the generated Markdown.
+        Submit the report in <strong>one place only</strong>: either open the
+        <a href="https://github.com/wingflexsim/Bridge-Software/issues" target="_blank" rel="noopener noreferrer">
+          Wingflex Bridge Software Issues page
+        </a>, click <strong>New issue</strong>, and paste the Markdown into the issue description,
+        or paste the Markdown into Discord's <strong>#bridge-bug-tracker</strong> channel.
+      </p>
+
+      <h2>Check for an existing report first</h2>
+      <p>
+        Before filing, search the existing issues in the
+        <a href="https://github.com/wingflexsim/Bridge-Software" target="_blank" rel="noopener noreferrer">
+          wingflexsim/Bridge-Software repository
+        </a>
+        for the same or a closely related problem.
+      </p>
+      <p class="procedure-warning">
+        <strong>Do not file the issue again if a duplicate or existing report is found.</strong>
+        Duplicate reports slow down the team's workflow. Add any useful new details to the existing issue instead.
+      </p>
+
+      <div class="procedure-action">
+        <button class="button primary" type="button" id="proceedButton">
+          I have read and fully understood the procedure
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <main id="reportApp" class="app-shell" hidden>
     <header class="hero">
       <div class="brand">
         <div>
           <h1>Wingflex Bug Report Generator</h1>
-          <p class="subtitle">
-            Complete the form below and copy the generated Markdown. Submit the report in
-            <strong>one place only</strong>: either open the
-            <a href="https://github.com/wingflexsim/Bridge-Software/issues" target="_blank" rel="noopener noreferrer">
-              Wingflex Bridge Software Issues page
-            </a>, click <strong>New issue</strong>, and paste the Markdown into the issue description,
-            or paste the Markdown into Discord's <strong>#bridge-bug-tracker</strong> channel.
-          </p>
           <p class="subtitle title-guide">
             Title format: <code>[Platform] Concise bug description</code>.
             Examples: <code>[MSFS 2024] FCU VS knob pull does not work</code> or
@@ -640,6 +719,13 @@
           <div class="actions">
             <button class="button primary" type="button" id="generateButton">Generate Markdown</button>
             <button class="button success" type="button" id="copyButton">Copy to Clipboard</button>
+            <a
+              class="button secondary"
+              id="fileIssueButton"
+              href="https://github.com/wingflexsim/Bridge-Software/issues/new/choose"
+              target="_blank"
+              rel="noopener noreferrer"
+            >File Issue</a>
             <button class="button secondary" type="reset" id="resetButton">Reset</button>
           </div>
 
@@ -660,9 +746,18 @@
   </main>
 
   <script>
+    const procedurePage = document.getElementById("procedurePage");
+    const reportApp = document.getElementById("reportApp");
     const form = document.getElementById("bugForm");
     const output = document.getElementById("markdownOutput");
     const copyStatus = document.getElementById("copyStatus");
+
+    document.getElementById("proceedButton").addEventListener("click", () => {
+      procedurePage.hidden = true;
+      reportApp.hidden = false;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.setTimeout(() => document.getElementById("title").focus(), 250);
+    });
 
     const customMappings = [
       ["product", "customProduct"],
