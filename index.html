@@ -101,6 +101,18 @@
 
     .procedure-action {
       margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .mode-label {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
     .hero {
@@ -444,6 +456,14 @@
         and paste the Markdown into the <strong>#bridge-bug-tracker</strong> channel.
       </p>
 
+      <h2>Compatibility requests</h2>
+      <p>
+        The latest compatibility list can be found on
+        <a href="https://www.wingflex.com/" target="_blank" rel="noopener noreferrer">wingflex.com</a>
+        under the item page for your specific product. If you would like to request support for an additional
+        aircraft, add-on, simulator, or feature, choose <strong>File a Feature/Compatibility Request</strong> below.
+      </p>
+
       <p class="procedure-warning">
         <strong>Suspect a hardware issue?</strong> Do not fill out this form. Reach out to
         <a href="https://discord.gg/pJCWPc2Gzu" target="_blank" rel="noopener noreferrer">Wingflex Support on Discord</a>
@@ -466,15 +486,14 @@
       <h2>No GitHub or Discord account?</h2>
       <p>
         Complete the form and download the generated Markdown file. Email it to
-        <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>, use the issue title
+        <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>, use the report title
         you entered as the email subject, and attach the downloaded Markdown file. The file will be named
-        <code>bug_username_date.md</code> using the username and date entered in the form.
+        <code>bug_username_date.md</code> for bugs or <code>feature_request_username_date.md</code> for requests.
       </p>
 
       <div class="procedure-action">
-        <button class="button primary" type="button" id="proceedButton">
-          I have read and fully understood the procedure
-        </button>
+        <button class="button primary" type="button" id="bugModeButton">File a Bug</button>
+        <button class="button success" type="button" id="featureModeButton">File a Feature/Compatibility Request</button>
       </div>
     </section>
   </main>
@@ -483,13 +502,14 @@
     <header class="hero">
       <div class="brand">
         <div>
-          <h1>Wingflex Bug Report Generator</h1>
-          <p class="subtitle title-guide">
+          <p class="mode-label" id="modeLabel">Bug report</p>
+          <h1 id="generatorTitle">Wingflex Bug Report Generator</h1>
+          <p class="subtitle title-guide" id="titleGuide">
             Title format: <code>[Platform] Concise bug description</code>.
             Examples: <code>[MSFS 2024] FCU VS knob pull does not work</code> or
             <code>[X-Plane 12] Overhead panel LEDs remain off after startup</code>.
           </p>
-          <p class="subtitle">
+          <p class="subtitle" id="supportingMediaGuide">
             Attaching a short video that clearly shows the issue is preferred and can make
             verification significantly easier.
           </p>
@@ -498,13 +518,13 @@
     </header>
 
     <div class="layout">
-      <section class="card form-card" aria-label="Bug report form">
+      <section class="card form-card" id="reportFormCard" aria-label="Bug report form">
         <form id="bugForm" novalidate>
           <div class="section">
-            <h2 class="section-title">Issue identification</h2>
+            <h2 class="section-title" id="identificationTitle">Issue identification</h2>
             <div class="grid two">
               <div class="field full">
-                <label for="title" class="required">Issue title</label>
+                <label for="title" class="required" id="titleLabel">Issue title</label>
                 <input
                   id="title"
                   name="title"
@@ -512,7 +532,7 @@
                   placeholder="[MSFS 2024] Combo Cube displays do not blank after power-off"
                   required
                 />
-                <p class="hint">
+                <p class="hint" id="titleHint">
                   Naming convention: [Platform] Concise bug description.
                 </p>
               </div>
@@ -537,12 +557,12 @@
           </div>
 
           <div class="section">
-            <h2 class="section-title">Environment</h2>
+            <h2 class="section-title" id="environmentTitle">Environment</h2>
             <div class="grid two">
               <div class="field">
                 <label for="status" class="required">Status</label>
                 <select id="status" name="status" required>
-                  <option value="Reported by user. Pinging @skylarkning for verification.">
+                  <option id="statusOption" value="Reported by user. Pinging @skylarkning for verification.">
                     Reported by user. Pinging @skylarkning for verification.
                   </option>
                 </select>
@@ -684,14 +704,25 @@
                 />
                 <p class="hint">Optional. Leave blank to omit this section.</p>
               </div>
+
+              <div class="field full" id="developerWebsiteField" hidden>
+                <label for="developerWebsite" class="required">Aircraft/Add-on developer website</label>
+                <input
+                  id="developerWebsite"
+                  name="developerWebsite"
+                  type="url"
+                  placeholder="https://developer.example.com/product"
+                />
+                <p class="hint">Provide a direct link to the aircraft or add-on developer's official website.</p>
+              </div>
             </div>
           </div>
 
           <div class="section">
-            <h2 class="section-title">Bug details</h2>
+            <h2 class="section-title" id="detailsTitle">Bug details</h2>
             <div class="grid">
               <div class="field">
-                <label for="issue" class="required">Issue</label>
+                <label for="issue" class="required" id="issueLabel">Issue</label>
                 <textarea
                   id="issue"
                   name="issue"
@@ -701,7 +732,7 @@
               </div>
 
               <div class="field">
-                <label for="steps" class="required">Steps to reproduce</label>
+                <label for="steps" class="required" id="stepsLabel">Steps to reproduce</label>
                 <textarea
                   id="steps"
                   name="steps"
@@ -709,11 +740,11 @@
                   placeholder="1. Launch the simulator.&#10;2. Load the affected aircraft.&#10;3. Open Wings Bridge.&#10;4. Connect the device.&#10;5. Perform the affected action.&#10;6. Observe the result."
                   required
                 ></textarea>
-                <p class="hint">Numbered steps are preserved automatically.</p>
+                <p class="hint" id="stepsHint">Numbered steps are preserved automatically.</p>
               </div>
 
               <div class="field">
-                <label for="expected" class="required">Expected result</label>
+                <label for="expected" class="required" id="expectedLabel">Expected result</label>
                 <textarea
                   id="expected"
                   name="expected"
@@ -723,7 +754,7 @@
               </div>
 
               <div class="field">
-                <label for="actual" class="required">Actual result</label>
+                <label for="actual" class="required" id="actualLabel">Actual result</label>
                 <textarea
                   id="actual"
                   name="actual"
@@ -733,7 +764,7 @@
               </div>
 
               <div class="field">
-                <label for="workaround" class="required">Workaround</label>
+                <label for="workaround" class="required" id="workaroundLabel">Workaround</label>
                 <textarea
                   id="workaround"
                   name="workaround"
@@ -743,17 +774,17 @@
               </div>
 
               <div class="field">
-                <label for="videoEvidence">Video evidence</label>
+                <label for="videoEvidence" id="videoEvidenceLabel">Video evidence</label>
                 <textarea
                   id="videoEvidence"
                   name="videoEvidence"
                   placeholder="Paste a link to a short video showing the issue, or note that the video will be attached directly to GitHub or Discord."
                 ></textarea>
-                <p class="hint">Preferred when available. A clear video can make reproduction and verification easier.</p>
+                <p class="hint" id="videoEvidenceHint">Preferred when available. A clear video can make reproduction and verification easier.</p>
               </div>
 
               <div class="field">
-                <label for="notes">Notes</label>
+                <label for="notes" id="notesLabel">Notes</label>
                 <textarea
                   id="notes"
                   name="notes"
@@ -787,7 +818,7 @@
 
           <p class="email-note">
             No GitHub or Discord account? Download <strong id="downloadFilename">bug_username_date.md</strong>,
-            email it to <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>, use your issue title
+            email it to <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>, use your report title
             as the subject, and attach the Markdown file.
           </p>
 
@@ -816,6 +847,80 @@
     const reportDateInput = document.getElementById("reportDate");
     const emailButton = document.getElementById("emailButton");
     const downloadFilename = document.getElementById("downloadFilename");
+    const developerWebsiteField = document.getElementById("developerWebsiteField");
+    const developerWebsiteInput = document.getElementById("developerWebsite");
+    const statusOption = document.getElementById("statusOption");
+
+    let reportMode = "bug";
+
+    const modeContent = {
+      bug: {
+        modeLabel: "Bug report",
+        generatorTitle: "Wingflex Bug Report Generator",
+        formAria: "Bug report form",
+        identificationTitle: "Issue identification",
+        titleLabel: "Issue title",
+        titlePlaceholder: "[MSFS 2024] Combo Cube displays do not blank after power-off",
+        titleGuide: "Title format: <code>[Platform] Concise bug description</code>. Example: <code>[MSFS 2024] FCU VS knob pull does not work</code>.",
+        titleHint: "Naming convention: [Platform] Concise bug description.",
+        supportingMediaGuide: "Attaching a short video that clearly shows the issue is preferred and can make verification significantly easier.",
+        environmentTitle: "Environment",
+        status: "Reported by user. Pinging @skylarkning for verification.",
+        detailsTitle: "Bug details",
+        issueLabel: "Issue",
+        issuePlaceholder: "Describe what is happening, when it occurs, and which functions are affected.",
+        stepsLabel: "Steps to reproduce",
+        stepsPlaceholder: "1. Launch the simulator.\n2. Load the affected aircraft.\n3. Open Wings Bridge.\n4. Connect the device.\n5. Perform the affected action.\n6. Observe the result.",
+        stepsHint: "Numbered steps are preserved automatically.",
+        expectedLabel: "Expected result",
+        expectedPlaceholder: "Describe what should happen.",
+        actualLabel: "Actual result",
+        actualPlaceholder: "Describe what actually happens.",
+        workaroundLabel: "Workaround",
+        workaroundPlaceholder: "No confirmed workaround at this time.",
+        workaroundDefault: "No confirmed workaround at this time.",
+        videoEvidenceLabel: "Video evidence",
+        videoEvidencePlaceholder: "Paste a link to a short video showing the issue, or note that the video will be attached directly to GitHub or Discord.",
+        videoEvidenceHint: "Preferred when available. A clear video can make reproduction and verification easier.",
+        notesLabel: "Notes",
+        notesPlaceholder: "Add confirmations, regression details, reference versions, or other context.",
+        filenamePrefix: "bug",
+        reportType: "Bug Report"
+      },
+      feature: {
+        modeLabel: "Feature / compatibility request",
+        generatorTitle: "Wingflex Feature and Compatibility Request Generator",
+        formAria: "Feature and compatibility request form",
+        identificationTitle: "Request identification",
+        titleLabel: "Request title",
+        titlePlaceholder: "[MSFS 2024] Add Combo Cube support for Example Aircraft",
+        titleGuide: "Title format: <code>[Platform] Concise feature or compatibility request</code>. Example: <code>[X-Plane 12] Add FCU Cube support for Example Aircraft</code>.",
+        titleHint: "Naming convention: [Platform] Concise feature or compatibility request.",
+        supportingMediaGuide: "Include documentation, developer references, screenshots, or videos that help explain the requested support.",
+        environmentTitle: "Target environment",
+        status: "Feature or compatibility request submitted by user. Pinging @skylarkning for review.",
+        detailsTitle: "Request details",
+        issueLabel: "Requested feature or compatibility",
+        issuePlaceholder: "Describe the feature, aircraft, add-on, simulator, or compatibility support you are requesting.",
+        stepsLabel: "Current workflow or limitation",
+        stepsPlaceholder: "Describe the current workflow, limitation, or missing functionality that led to this request.",
+        stepsHint: "Explain what users currently need to do and where the limitation occurs.",
+        expectedLabel: "Desired result",
+        expectedPlaceholder: "Describe how the requested support should work.",
+        actualLabel: "Current result or behavior",
+        actualPlaceholder: "Describe the current behavior or state of compatibility.",
+        workaroundLabel: "Current workaround or alternative",
+        workaroundPlaceholder: "Describe any current workaround or alternative, or enter None.",
+        workaroundDefault: "No current workaround or alternative.",
+        videoEvidenceLabel: "Supporting media or documentation",
+        videoEvidencePlaceholder: "Paste links to documentation, screenshots, videos, SDK details, or other supporting material.",
+        videoEvidenceHint: "Optional, but supporting technical information can help us evaluate the request.",
+        notesLabel: "Additional context",
+        notesPlaceholder: "Add demand, use cases, developer contact information, or other useful context.",
+        filenamePrefix: "feature_request",
+        reportType: "Feature / Compatibility Request"
+      }
+    };
 
     const now = new Date();
     const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
@@ -824,12 +929,60 @@
     reportDateInput.value = localToday;
     reportDateInput.defaultValue = localToday;
 
-    document.getElementById("proceedButton").addEventListener("click", () => {
+    function setReportMode(mode) {
+      reportMode = mode;
+      const content = modeContent[mode];
+      const isFeatureRequest = mode === "feature";
+      const workaround = document.getElementById("workaround");
+      const priorDefaults = Object.values(modeContent).map((item) => item.workaroundDefault);
+
+      document.getElementById("modeLabel").textContent = content.modeLabel;
+      document.getElementById("generatorTitle").textContent = content.generatorTitle;
+      document.getElementById("reportFormCard").setAttribute("aria-label", content.formAria);
+      document.getElementById("identificationTitle").textContent = content.identificationTitle;
+      document.getElementById("titleLabel").textContent = content.titleLabel;
+      document.getElementById("title").placeholder = content.titlePlaceholder;
+      document.getElementById("titleGuide").innerHTML = content.titleGuide;
+      document.getElementById("titleHint").textContent = content.titleHint;
+      document.getElementById("supportingMediaGuide").textContent = content.supportingMediaGuide;
+      document.getElementById("environmentTitle").textContent = content.environmentTitle;
+      statusOption.value = content.status;
+      statusOption.textContent = content.status;
+      document.getElementById("detailsTitle").textContent = content.detailsTitle;
+
+      ["issue", "steps", "expected", "actual", "workaround", "videoEvidence", "notes"].forEach((fieldId) => {
+        document.getElementById(`${fieldId}Label`).textContent = content[`${fieldId}Label`];
+        document.getElementById(fieldId).placeholder = content[`${fieldId}Placeholder`];
+      });
+
+      document.getElementById("stepsHint").textContent = content.stepsHint;
+      document.getElementById("videoEvidenceHint").textContent = content.videoEvidenceHint;
+
+      if (!workaround.value.trim() || priorDefaults.includes(workaround.value.trim())) {
+        workaround.value = content.workaroundDefault;
+        workaround.defaultValue = content.workaroundDefault;
+      }
+
+      developerWebsiteField.hidden = !isFeatureRequest;
+      developerWebsiteInput.required = isFeatureRequest;
+      if (!isFeatureRequest) {
+        developerWebsiteInput.classList.remove("invalid");
+      }
+
+      updateSubmissionDetails();
+      generateMarkdown(false);
+    }
+
+    function startReport(mode) {
+      setReportMode(mode);
       procedurePage.hidden = true;
       reportApp.hidden = false;
       window.scrollTo({ top: 0, behavior: "smooth" });
       window.setTimeout(() => document.getElementById("title").focus(), 250);
-    });
+    }
+
+    document.getElementById("bugModeButton").addEventListener("click", () => startReport("bug"));
+    document.getElementById("featureModeButton").addEventListener("click", () => startReport("feature"));
 
     const customMappings = [
       ["firmwareVersion", "customFirmwareVersion"],
@@ -889,7 +1042,7 @@
     function markdownFilename() {
       const username = safeFilenamePart(document.getElementById("username").value, "username");
       const reportDate = safeFilenamePart(reportDateInput.value, "date");
-      return `bug_${username}_${reportDate}.md`;
+      return `${modeContent[reportMode].filenamePrefix}_${username}_${reportDate}.md`;
     }
 
     function updateSubmissionDetails() {
@@ -919,6 +1072,7 @@
       const firmwareVersion = selectedValue("firmwareVersion", "customFirmwareVersion");
       const simulator = selectedValue("simulator", "customSimulator");
       const aircraft = selectedValue("aircraft", "customAircraft");
+      const developerWebsite = cleanText(developerWebsiteInput.value);
       const systemSpecs = cleanText(document.getElementById("systemSpecs").value);
       const issue = cleanText(document.getElementById("issue").value);
       const steps = cleanText(document.getElementById("steps").value);
@@ -934,31 +1088,45 @@
         parts.push(`# ${title}`);
       }
 
+      const content = modeContent[reportMode];
+      parts.push(section("Request Type", content.reportType));
       parts.push(section("Reporter Username", username || "N/A"));
       parts.push(section("Report Date", reportDate || "N/A"));
-      parts.push(section("Status", status || "Reported by user. Pinging @skylarkning for verification."));
+      parts.push(section("Status", status || content.status));
       parts.push(section("Product", product || "N/A"));
       parts.push(section("Bridge Version", bridgeVersion || "N/A"));
       parts.push(section("Firmware Version", firmwareVersion || "N/A"));
       parts.push(section("Simulator", simulator || "N/A"));
       parts.push(section("Aircraft/Add-on", aircraft || "N/A"));
 
+      if (reportMode === "feature") {
+        parts.push(section("Aircraft/Add-on Developer Website", developerWebsite || "N/A"));
+      }
+
       if (systemSpecs) {
         parts.push(section("System Specs", systemSpecs));
       }
 
-      parts.push(section("Issue", issue || "Describe the issue."));
-      parts.push(section("Steps to Reproduce", steps || "1. Add reproduction steps."));
-      parts.push(section("Expected Result", expected || "Describe the expected result."));
-      parts.push(section("Actual Result", actual || "Describe the actual result."));
-      parts.push(section("Workaround", workaround || "No confirmed workaround at this time."));
+      if (reportMode === "feature") {
+        parts.push(section("Requested Feature or Compatibility", issue || "Describe the requested support."));
+        parts.push(section("Current Workflow or Limitation", steps || "Describe the current limitation."));
+        parts.push(section("Desired Result", expected || "Describe the desired result."));
+        parts.push(section("Current Result or Behavior", actual || "Describe the current behavior."));
+        parts.push(section("Current Workaround or Alternative", workaround || content.workaroundDefault));
+      } else {
+        parts.push(section("Issue", issue || "Describe the issue."));
+        parts.push(section("Steps to Reproduce", steps || "1. Add reproduction steps."));
+        parts.push(section("Expected Result", expected || "Describe the expected result."));
+        parts.push(section("Actual Result", actual || "Describe the actual result."));
+        parts.push(section("Workaround", workaround || content.workaroundDefault));
+      }
 
       if (videoEvidence) {
-        parts.push(section("Video Evidence", videoEvidence));
+        parts.push(section(reportMode === "feature" ? "Supporting Media or Documentation" : "Video Evidence", videoEvidence));
       }
 
       if (notes) {
-        parts.push(section("Notes", notes));
+        parts.push(section(reportMode === "feature" ? "Additional Context" : "Notes", notes));
       }
 
       const markdown = parts.join("\n\n");
@@ -1077,13 +1245,11 @@
         });
         [...form.querySelectorAll(".invalid")].forEach((el) => el.classList.remove("invalid"));
         copyStatus.textContent = "";
-        generateMarkdown(false);
-        updateSubmissionDetails();
+        setReportMode(reportMode);
       }, 0);
     });
 
-    updateSubmissionDetails();
-    generateMarkdown(false);
+    setReportMode("bug");
   </script>
 </body>
 </html>
