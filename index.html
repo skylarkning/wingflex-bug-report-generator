@@ -580,12 +580,20 @@
                   <option>737 CDU/FMC</option>
                   <option>777 CDU/FMC</option>
                   <option>A320 Overhead Panel</option>
-                  <option>DP320</option>
-                  <option>GMP (Gear)</option>
+                  <option>DP320 (Flight Display)</option>
+                  <option>GMP (Gear Management Panel)</option>
                   <option>DAP-500</option>
                   <option>ECP(ECAM)</option>
                   <option>A3N Tiller</option>
+                  <option value="Custom">Other…</option>
                 </select>
+                <input
+                  id="customProduct"
+                  class="custom-field"
+                  type="text"
+                  aria-label="Other product"
+                  placeholder="Enter the product name"
+                />
               </div>
 
               <div class="field">
@@ -985,6 +993,7 @@
     document.getElementById("featureModeButton").addEventListener("click", () => startReport("feature"));
 
     const customMappings = [
+      ["product", "customProduct"],
       ["firmwareVersion", "customFirmwareVersion"],
       ["simulator", "customSimulator"],
       ["aircraft", "customAircraft"]
@@ -1067,7 +1076,7 @@
       const username = cleanText(document.getElementById("username").value);
       const reportDate = reportDateInput.value.trim();
       const status = document.getElementById("status").value.trim();
-      const product = document.getElementById("product").value.trim();
+      const product = selectedValue("product", "customProduct");
       const bridgeVersion = cleanText(document.getElementById("bridgeVersion").value);
       const firmwareVersion = selectedValue("firmwareVersion", "customFirmwareVersion");
       const simulator = selectedValue("simulator", "customSimulator");
