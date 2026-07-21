@@ -373,6 +373,18 @@
       margin: 16px 0 0;
     }
 
+    .email-note {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.55;
+      margin: 14px 0 0;
+    }
+
+    .email-note a {
+      color: var(--accent);
+      font-weight: 750;
+    }
+
     .invalid {
       border-color: var(--danger) !important;
       box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1) !important;
@@ -427,7 +439,9 @@
         <a href="https://github.com/wingflexsim/Bridge-Software/issues" target="_blank" rel="noopener noreferrer">
           Wingflex Bridge Software Issues page
         </a>, click <strong>New issue</strong>, and paste the Markdown into the issue description,
-        or paste the Markdown into Discord's <strong>#bridge-bug-tracker</strong> channel.
+        or join the
+        <a href="https://discord.gg/pJCWPc2Gzu" target="_blank" rel="noopener noreferrer">Wingflex Discord</a>
+        and paste the Markdown into the <strong>#bridge-bug-tracker</strong> channel.
       </p>
 
       <h2>Check for an existing report first</h2>
@@ -441,6 +455,14 @@
       <p class="procedure-warning">
         <strong>Do not file the issue again if a duplicate or existing report is found.</strong>
         Duplicate reports slow down the team's workflow. Add any useful new details to the existing issue instead.
+      </p>
+
+      <h2>No GitHub or Discord account?</h2>
+      <p>
+        Complete the form and download the generated Markdown file. Email it to
+        <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>, use the issue title
+        you entered as the email subject, and attach the downloaded Markdown file. The file will be named
+        <code>bug_username_date.md</code> using the username and date entered in the form.
       </p>
 
       <div class="procedure-action">
@@ -474,8 +496,8 @@
         <form id="bugForm" novalidate>
           <div class="section">
             <h2 class="section-title">Issue identification</h2>
-            <div class="grid">
-              <div class="field">
+            <div class="grid two">
+              <div class="field full">
                 <label for="title" class="required">Issue title</label>
                 <input
                   id="title"
@@ -487,6 +509,23 @@
                 <p class="hint">
                   Naming convention: [Platform] Concise bug description.
                 </p>
+              </div>
+
+              <div class="field">
+                <label for="username" class="required">Username</label>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="Your GitHub, Discord, or preferred username"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="reportDate" class="required">Report date</label>
+                <input id="reportDate" name="reportDate" type="date" required />
+                <p class="hint">Select the date using the calendar.</p>
               </div>
             </div>
           </div>
@@ -725,9 +764,24 @@
               href="https://github.com/wingflexsim/Bridge-Software/issues/new/choose"
               target="_blank"
               rel="noopener noreferrer"
-            >File Issue</a>
+            >File on GitHub</a>
+            <a
+              class="button secondary"
+              id="fileDiscordButton"
+              href="https://discord.gg/pJCWPc2Gzu"
+              target="_blank"
+              rel="noopener noreferrer"
+            >File on Discord</a>
+            <button class="button secondary" type="button" id="downloadButton">Download Markdown</button>
+            <a class="button secondary" id="emailButton" href="mailto:skyning@wingflexsim.com">Email Report</a>
             <button class="button secondary" type="reset" id="resetButton">Reset</button>
           </div>
+
+          <p class="email-note">
+            No GitHub or Discord account? Download <strong id="downloadFilename">bug_username_date.md</strong>,
+            email it to <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>, use your issue title
+            as the subject, and attach the Markdown file.
+          </p>
 
           <p class="footer-note">
             Required fields are marked with an asterisk. Markdown is also updated automatically as you type.
@@ -751,6 +805,16 @@
     const form = document.getElementById("bugForm");
     const output = document.getElementById("markdownOutput");
     const copyStatus = document.getElementById("copyStatus");
+    const reportDateInput = document.getElementById("reportDate");
+    const emailButton = document.getElementById("emailButton");
+    const downloadFilename = document.getElementById("downloadFilename");
+
+    const now = new Date();
+    const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 10);
+    reportDateInput.value = localToday;
+    reportDateInput.defaultValue = localToday;
 
     document.getElementById("proceedButton").addEventListener("click", () => {
       procedurePage.hidden = true;
@@ -806,6 +870,31 @@
       return `## ${title}\n\n${content}`;
     }
 
+    function safeFilenamePart(value, fallback) {
+      const safeValue = value
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+      return safeValue || fallback;
+    }
+
+    function markdownFilename() {
+      const username = safeFilenamePart(document.getElementById("username").value, "username");
+      const reportDate = safeFilenamePart(reportDateInput.value, "date");
+      return `bug_${username}_${reportDate}.md`;
+    }
+
+    function updateSubmissionDetails() {
+      const title = cleanText(document.getElementById("title").value);
+      const filename = markdownFilename();
+      const subject = encodeURIComponent(title);
+      const body = encodeURIComponent(`Please attach ${filename} to this email.`);
+
+      downloadFilename.textContent = filename;
+      emailButton.href = `mailto:skyning@wingflexsim.com?subject=${subject}&body=${body}`;
+    }
+
     function generateMarkdown(validate = true) {
       if (validate && !validateForm()) {
         copyStatus.textContent = "Please complete the required fields.";
@@ -815,6 +904,8 @@
       copyStatus.textContent = "";
 
       const title = cleanText(document.getElementById("title").value);
+      const username = cleanText(document.getElementById("username").value);
+      const reportDate = reportDateInput.value.trim();
       const status = document.getElementById("status").value.trim();
       const product = selectedValue("product", "customProduct");
       const bridgeVersion = cleanText(document.getElementById("bridgeVersion").value);
@@ -836,6 +927,8 @@
         parts.push(`# ${title}`);
       }
 
+      parts.push(section("Reporter Username", username || "N/A"));
+      parts.push(section("Report Date", reportDate || "N/A"));
       parts.push(section("Status", status || "Reported by user. Pinging @skylarkning for verification."));
       parts.push(section("Product", product || "N/A"));
       parts.push(section("Bridge Version", bridgeVersion || "N/A"));
@@ -920,7 +1013,32 @@
       }, 2600);
     }
 
-    form.addEventListener("input", () => generateMarkdown(false));
+    function downloadMarkdownFile() {
+      const markdown = generateMarkdown(true);
+      if (!markdown) return;
+
+      const filename = markdownFilename();
+      const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      copyStatus.textContent = `Downloaded ${filename}.`;
+      window.setTimeout(() => {
+        copyStatus.textContent = "";
+      }, 3000);
+    }
+
+    form.addEventListener("input", () => {
+      generateMarkdown(false);
+      updateSubmissionDetails();
+    });
 
     document.getElementById("generateButton").addEventListener("click", () => {
       const markdown = generateMarkdown(true);
@@ -934,6 +1052,15 @@
     });
 
     document.getElementById("copyButton").addEventListener("click", copyMarkdown);
+    document.getElementById("downloadButton").addEventListener("click", downloadMarkdownFile);
+
+    emailButton.addEventListener("click", (event) => {
+      if (!generateMarkdown(true)) {
+        event.preventDefault();
+        return;
+      }
+      updateSubmissionDetails();
+    });
 
     form.addEventListener("reset", () => {
       window.setTimeout(() => {
@@ -944,9 +1071,11 @@
         [...form.querySelectorAll(".invalid")].forEach((el) => el.classList.remove("invalid"));
         copyStatus.textContent = "";
         generateMarkdown(false);
+        updateSubmissionDetails();
       }, 0);
     });
 
+    updateSubmissionDetails();
     generateMarkdown(false);
   </script>
 </body>
