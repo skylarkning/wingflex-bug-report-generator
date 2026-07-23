@@ -1006,7 +1006,7 @@
           customProductPlaceholder: "请输入产品名称", customFirmwarePlaceholder: "请输入固件版本",
           customSimulatorPlaceholder: "请输入模拟器名称", customAircraftPlaceholder: "请输入机型或插件名称",
           generateButton: "生成 Markdown", copyButton: "复制 Markdown", fileIssueButton: "提交到 GitHub",
-          communityButton: "发送到 QQ 群 176129613", downloadButton: "下载 Markdown", emailButton: "发送邮件",
+          communityButton: "下载并发送到 QQ 群 176129613", downloadButton: "下载 Markdown", emailButton: "发送邮件",
           resetButton: "重置", previewTitle: "生成的 Markdown", previewAria: "Markdown 预览",
           footer: "带星号的项目为必填项。输入内容时，Markdown 会自动更新。"
         },
@@ -1064,7 +1064,7 @@
         messages: {
           required: "请填写所有必填项。", copied: "已复制到剪贴板。", copyFailed: "复制失败，请手动选择并复制预览内容。",
           generated: "Markdown 已生成。", downloaded: "已下载 {filename}。", emailBody: "请将 {filename} 作为附件添加到此邮件。",
-          communityCopied: "Markdown 已复制。请加入 QQ 群 176129613，并将内容粘贴发送到群内。"
+          communityDownloaded: "已下载 {filename}。请加入 QQ 群 176129613，并将该 Markdown 文件发送到群内。"
         }
       }
     };
@@ -1363,7 +1363,7 @@
       return copied;
     }
 
-    function downloadMarkdownFile() {
+    function downloadMarkdownFile(forQq = false) {
       const markdown = generateMarkdown(true);
       if (!markdown) return;
       const filename = markdownFilename();
@@ -1376,7 +1376,8 @@
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      copyStatus.textContent = locale().messages.downloaded.replace("{filename}", filename);
+      const message = forQq ? locale().messages.communityDownloaded : locale().messages.downloaded;
+      copyStatus.textContent = message.replace("{filename}", filename);
       window.setTimeout(() => { copyStatus.textContent = ""; }, 3000);
     }
 
@@ -1392,16 +1393,15 @@
       }
     });
     document.getElementById("copyButton").addEventListener("click", copyMarkdown);
-    document.getElementById("downloadButton").addEventListener("click", downloadMarkdownFile);
-    communityButton.addEventListener("click", async () => {
-      const markdown = generateMarkdown(true);
-      if (!markdown) return;
-      if (currentLanguage === "en") {
-        window.open("https://discord.gg/pJCWPc2Gzu", "_blank", "noopener,noreferrer");
+    document.getElementById("downloadButton").addEventListener("click", () => downloadMarkdownFile(false));
+    communityButton.addEventListener("click", () => {
+      if (currentLanguage === "zh") {
+        downloadMarkdownFile(true);
         return;
       }
-      const copied = await writeClipboard(markdown);
-      copyStatus.textContent = copied ? locale().messages.communityCopied : locale().messages.copyFailed;
+      if (generateMarkdown(true)) {
+        window.open("https://discord.gg/pJCWPc2Gzu", "_blank", "noopener,noreferrer");
+      }
     });
     emailButton.addEventListener("click", (event) => {
       if (!generateMarkdown(true)) { event.preventDefault(); return; }
