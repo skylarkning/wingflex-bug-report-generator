@@ -71,6 +71,19 @@
       padding: clamp(24px, 5vw, 42px);
     }
 
+    .language-card {
+      text-align: center;
+    }
+
+    .language-card p {
+      margin: 14px auto 0;
+      max-width: 520px;
+    }
+
+    .language-card .procedure-action {
+      justify-content: center;
+    }
+
     .procedure-card h1 {
       margin-bottom: 14px;
     }
@@ -442,8 +455,19 @@
   </style>
 </head>
 <body>
-  <main id="procedurePage" class="procedure-shell">
-    <section class="card procedure-card" aria-labelledby="procedureTitle">
+  <main id="languagePage" class="procedure-shell">
+    <section class="card procedure-card language-card" aria-labelledby="languageTitle">
+      <h1 id="languageTitle">Choose your language<br />请选择语言</h1>
+      <p>Select a language to review the reporting procedure.<br />选择语言后，请先阅读问题报告流程。</p>
+      <div class="procedure-action">
+        <button class="button primary" type="button" id="englishButton">English</button>
+        <button class="button success" type="button" id="chineseButton">简体中文</button>
+      </div>
+    </section>
+  </main>
+
+  <main id="procedurePage" class="procedure-shell" hidden>
+    <section class="card procedure-card" id="procedureCard" aria-labelledby="procedureTitle">
       <h1 id="procedureTitle">Read before you proceed</h1>
       <p>
         Complete the form after acknowledging these instructions, then copy the generated Markdown.
@@ -538,7 +562,7 @@
               </div>
 
               <div class="field">
-                <label for="username" class="required">Username</label>
+                <label for="username" class="required" id="usernameLabel">Username</label>
                 <input
                   id="username"
                   name="username"
@@ -549,9 +573,9 @@
               </div>
 
               <div class="field">
-                <label for="reportDate" class="required">Report date</label>
+                <label for="reportDate" class="required" id="reportDateLabel">Report date</label>
                 <input id="reportDate" name="reportDate" type="date" required />
-                <p class="hint">Select the date using the calendar.</p>
+                <p class="hint" id="reportDateHint">Select the date using the calendar.</p>
               </div>
             </div>
           </div>
@@ -560,7 +584,7 @@
             <h2 class="section-title" id="environmentTitle">Environment</h2>
             <div class="grid two">
               <div class="field">
-                <label for="status" class="required">Status</label>
+                <label for="status" class="required" id="statusLabel">Status</label>
                 <select id="status" name="status" required>
                   <option id="statusOption" value="Reported by user. Pinging @skylarkning for verification.">
                     Reported by user. Pinging @skylarkning for verification.
@@ -569,7 +593,7 @@
               </div>
 
               <div class="field">
-                <label for="product" class="required">Product</label>
+                <label for="product" class="required" id="productLabel">Product</label>
                 <select id="product" name="product" required>
                   <option value="">Select product…</option>
                   <option>FCU Cube</option>
@@ -597,7 +621,7 @@
               </div>
 
               <div class="field">
-                <label for="bridgeVersion" class="required">Bridge version</label>
+                <label for="bridgeVersion" class="required" id="bridgeVersionLabel">Bridge version</label>
                 <input
                   id="bridgeVersion"
                   name="bridgeVersion"
@@ -608,7 +632,7 @@
               </div>
 
               <div class="field">
-                <label for="firmwareVersion" class="required">Firmware version</label>
+                <label for="firmwareVersion" class="required" id="firmwareVersionLabel">Firmware version</label>
                 <select id="firmwareVersion" name="firmwareVersion" required>
                   <option>N/A</option>
                   <option>Latest firmware</option>
@@ -620,7 +644,7 @@
               </div>
 
               <div class="field">
-                <label for="simulator" class="required">Simulator</label>
+                <label for="simulator" class="required" id="simulatorLabel">Simulator</label>
                 <select id="simulator" name="simulator" required>
                   <option value="">Select simulator…</option>
                   <option>MSFS 2020</option>
@@ -636,7 +660,7 @@
               </div>
 
               <div class="field">
-                <label for="aircraft" class="required">Aircraft / Add-on</label>
+                <label for="aircraft" class="required" id="aircraftLabel">Aircraft / Add-on</label>
                 <select id="aircraft" name="aircraft" required>
                   <option value="">Select aircraft or add-on…</option>
                   <option>Default / Stock Aircraft</option>
@@ -703,25 +727,25 @@
               </div>
 
               <div class="field full">
-                <label for="systemSpecs">System specifications</label>
+                <label for="systemSpecs" id="systemSpecsLabel">System specifications</label>
                 <input
                   id="systemSpecs"
                   name="systemSpecs"
                   type="text"
                   placeholder="Example: Ryzen 7 7800X3D, RX 9700 XT, 32GB DDR5"
                 />
-                <p class="hint">Optional. Leave blank to omit this section.</p>
+                <p class="hint" id="systemSpecsHint">Optional. Leave blank to omit this section.</p>
               </div>
 
               <div class="field full" id="developerWebsiteField" hidden>
-                <label for="developerWebsite" class="required">Aircraft/Add-on developer website</label>
+                <label for="developerWebsite" class="required" id="developerWebsiteLabel">Aircraft/Add-on developer website</label>
                 <input
                   id="developerWebsite"
                   name="developerWebsite"
                   type="url"
                   placeholder="https://developer.example.com/product"
                 />
-                <p class="hint">Provide a direct link to the aircraft or add-on developer's official website.</p>
+                <p class="hint" id="developerWebsiteHint">Provide a direct link to the aircraft or add-on developer's official website.</p>
               </div>
             </div>
           </div>
@@ -812,33 +836,27 @@
               target="_blank"
               rel="noopener noreferrer"
             >File on GitHub</a>
-            <a
-              class="button secondary"
-              id="fileDiscordButton"
-              href="https://discord.gg/pJCWPc2Gzu"
-              target="_blank"
-              rel="noopener noreferrer"
-            >File on Discord</a>
+            <button class="button secondary" type="button" id="communityButton">File on Discord</button>
             <button class="button secondary" type="button" id="downloadButton">Download Markdown</button>
             <a class="button secondary" id="emailButton" href="mailto:skyning@wingflexsim.com">Email Report</a>
             <button class="button secondary" type="reset" id="resetButton">Reset</button>
           </div>
 
-          <p class="email-note">
+          <p class="email-note" id="emailNote">
             No GitHub or Discord account? Download <strong id="downloadFilename">bug_username_date.md</strong>,
             email it to <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>, use your report title
             as the subject, and attach the Markdown file.
           </p>
 
-          <p class="footer-note">
+          <p class="footer-note" id="footerNote">
             Required fields are marked with an asterisk. Markdown is also updated automatically as you type.
           </p>
         </form>
       </section>
 
-      <aside class="card preview-card" aria-label="Markdown preview">
+      <aside class="card preview-card" id="previewCard" aria-label="Markdown preview">
         <div class="preview-header">
-          <h2>Generated Markdown</h2>
+          <h2 id="previewTitle">Generated Markdown</h2>
           <div id="copyStatus" class="copy-status" aria-live="polite"></div>
         </div>
         <pre id="markdownOutput" class="markdown-output"></pre>
@@ -846,137 +864,324 @@
     </div>
   </main>
 
+
   <script>
+    const languagePage = document.getElementById("languagePage");
     const procedurePage = document.getElementById("procedurePage");
+    const procedureCard = document.getElementById("procedureCard");
     const reportApp = document.getElementById("reportApp");
     const form = document.getElementById("bugForm");
     const output = document.getElementById("markdownOutput");
     const copyStatus = document.getElementById("copyStatus");
     const reportDateInput = document.getElementById("reportDate");
     const emailButton = document.getElementById("emailButton");
-    const downloadFilename = document.getElementById("downloadFilename");
     const developerWebsiteField = document.getElementById("developerWebsiteField");
     const developerWebsiteInput = document.getElementById("developerWebsite");
     const statusOption = document.getElementById("statusOption");
+    const communityButton = document.getElementById("communityButton");
 
+    let currentLanguage = "en";
     let reportMode = "bug";
 
-    const modeContent = {
-      bug: {
-        modeLabel: "Bug report",
-        generatorTitle: "Wingflex Bug Report Generator",
-        formAria: "Bug report form",
-        identificationTitle: "Issue identification",
-        titleLabel: "Issue title",
-        titlePlaceholder: "[MSFS 2024] Combo Cube displays do not blank after power-off",
-        titleGuide: "Title format: <code>[Platform] Concise bug description</code>. Example: <code>[MSFS 2024] FCU VS knob pull does not work</code>.",
-        titleHint: "Naming convention: [Platform] Concise bug description.",
-        supportingMediaGuide: "Attaching a short video that clearly shows the issue is preferred and can make verification significantly easier.",
-        environmentTitle: "Environment",
-        status: "Reported by user. Pinging @skylarkning for verification.",
-        detailsTitle: "Bug details",
-        issueLabel: "Issue",
-        issuePlaceholder: "Describe what is happening, when it occurs, and which functions are affected.",
-        stepsLabel: "Steps to reproduce",
-        stepsPlaceholder: "1. Launch the simulator.\n2. Load the affected aircraft.\n3. Open Wings Bridge.\n4. Connect the device.\n5. Perform the affected action.\n6. Observe the result.",
-        stepsHint: "Numbered steps are preserved automatically.",
-        expectedLabel: "Expected result",
-        expectedPlaceholder: "Describe what should happen.",
-        actualLabel: "Actual result",
-        actualPlaceholder: "Describe what actually happens.",
-        workaroundLabel: "Workaround",
-        workaroundPlaceholder: "No confirmed workaround at this time.",
-        workaroundDefault: "No confirmed workaround at this time.",
-        videoEvidenceLabel: "Video evidence",
-        videoEvidencePlaceholder: "Paste a link to a short video showing the issue, or note that the video will be attached directly to GitHub or Discord.",
-        videoEvidenceHint: "Preferred when available. A clear video can make reproduction and verification easier.",
-        notesLabel: "Notes",
-        notesPlaceholder: "Add confirmations, regression details, reference versions, or other context.",
-        filenamePrefix: "bug",
-        reportType: "Bug Report"
+    const translations = {
+      en: {
+        documentTitle: "Wingflex Bug Report Generator",
+        description: "Generate standardized Wingflex bug and feature reports in Markdown format.",
+        procedureHtml: `
+          <h1 id="procedureTitle">Read before you proceed</h1>
+          <p>Complete the form after acknowledging these instructions, then copy the generated Markdown. Submit the report in <strong>one place only</strong>: either open the <a href="https://github.com/wingflexsim/Bridge-Software/issues" target="_blank" rel="noopener noreferrer">Wingflex Bridge Software Issues page</a>, click <strong>New issue</strong>, and paste the Markdown into the issue description, or join the <a href="https://discord.gg/pJCWPc2Gzu" target="_blank" rel="noopener noreferrer">Wingflex Discord</a> and paste the Markdown into the <strong>#bridge-bug-tracker</strong> channel.</p>
+          <h2>Compatibility requests</h2>
+          <p>The latest compatibility list can be found on <a href="https://www.wingflex.com/" target="_blank" rel="noopener noreferrer">wingflex.com</a> under the item page for your specific product. If you would like to request support for an additional aircraft, add-on, simulator, or feature, choose <strong>File a Feature/Compatibility Request</strong> below.</p>
+          <p class="procedure-warning"><strong>Suspect a hardware issue?</strong> Do not fill out this form. Reach out to <a href="https://discord.gg/pJCWPc2Gzu" target="_blank" rel="noopener noreferrer">Wingflex Support on Discord</a> for direct assistance instead.</p>
+          <h2>Check for an existing report first</h2>
+          <p>Before filing, search the existing issues in the <a href="https://github.com/wingflexsim/Bridge-Software/issues" target="_blank" rel="noopener noreferrer">wingflexsim/Bridge-Software repository</a> for the same or a closely related problem.</p>
+          <p class="procedure-warning"><strong>Do not file the issue again if a duplicate or existing report is found.</strong> Duplicate reports slow down the team's workflow. Add any useful new details to the existing issue instead.</p>
+          <h2>No GitHub or Discord account?</h2>
+          <p>Complete the form and download the generated Markdown file. Email it to <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>, use the report title you entered as the email subject, and attach the Markdown file. The file will be named <code>bug_username_date.md</code> for bugs or <code>feature_request_username_date.md</code> for requests.</p>
+          <div class="procedure-action"><button class="button primary" type="button" id="bugModeButton">File a Bug</button><button class="button success" type="button" id="featureModeButton">File a Feature/Compatibility Request</button></div>`,
+        static: {
+          usernameLabel: "Username", usernamePlaceholder: "Your GitHub, Discord, or preferred username",
+          reportDateLabel: "Report date", reportDateHint: "Select the date using the calendar.",
+          statusLabel: "Status", productLabel: "Product", bridgeVersionLabel: "Bridge version",
+          bridgeVersionPlaceholder: "Example: V3.0.0.1-Hotfix", firmwareVersionLabel: "Firmware version",
+          simulatorLabel: "Simulator", aircraftLabel: "Aircraft / Add-on",
+          systemSpecsLabel: "System specifications", systemSpecsPlaceholder: "Example: Ryzen 7 7800X3D, RX 9700 XT, 32GB DDR5",
+          systemSpecsHint: "Optional. Leave blank to omit this section.",
+          developerWebsiteLabel: "Aircraft/Add-on developer website",
+          developerWebsiteHint: "Provide a direct link to the aircraft or add-on developer's official website.",
+          customProductPlaceholder: "Enter the product name", customFirmwarePlaceholder: "Enter firmware version",
+          customSimulatorPlaceholder: "Enter custom simulator", customAircraftPlaceholder: "Enter aircraft or add-on",
+          generateButton: "Generate Markdown", copyButton: "Copy to Clipboard", fileIssueButton: "File on GitHub",
+          communityButton: "File on Discord", downloadButton: "Download Markdown", emailButton: "Email Report",
+          resetButton: "Reset", previewTitle: "Generated Markdown", previewAria: "Markdown preview",
+          footer: "Required fields are marked with an asterisk. Markdown is also updated automatically as you type."
+        },
+        options: {
+          productEmpty: "Select product…", productCustom: "Other…", firmwareLatest: "Latest firmware",
+          firmwarePersists: "Firmware upgraded, but issue persists.", unknown: "Unknown", custom: "Custom…",
+          simulatorEmpty: "Select simulator…", aircraftEmpty: "Select aircraft or add-on…",
+          stockAircraft: "Default / Stock Aircraft", airbus: "── Airbus ──", boeing: "── Boeing ──",
+          business: "── Business / General Aviation ──", regional: "── Regional / Other ──"
+        },
+        modes: {
+          bug: {
+            modeLabel: "Bug report", generatorTitle: "Wingflex Bug Report Generator", formAria: "Bug report form",
+            identificationTitle: "Issue identification", titleLabel: "Issue title",
+            titlePlaceholder: "[MSFS 2024] Combo Cube displays do not blank after power-off",
+            titleGuide: "Title format: <code>[Platform] Concise bug description</code>. Example: <code>[MSFS 2024] FCU VS knob pull does not work</code>.",
+            titleHint: "Naming convention: [Platform] Concise bug description.",
+            supportingMediaGuide: "Attaching a short video that clearly shows the issue is preferred and can make verification significantly easier.",
+            environmentTitle: "Environment", status: "Reported by user. Pinging @skylarkning for verification.", detailsTitle: "Bug details",
+            issueLabel: "Issue", issuePlaceholder: "Describe what is happening, when it occurs, and which functions are affected.",
+            stepsLabel: "Steps to reproduce", stepsPlaceholder: "1. Launch the simulator.\n2. Load the affected aircraft.\n3. Open Wings Bridge.\n4. Connect the device.\n5. Perform the affected action.\n6. Observe the result.",
+            stepsHint: "Numbered steps are preserved automatically.", expectedLabel: "Expected result", expectedPlaceholder: "Describe what should happen.",
+            actualLabel: "Actual result", actualPlaceholder: "Describe what actually happens.", workaroundLabel: "Workaround",
+            workaroundPlaceholder: "No confirmed workaround at this time.", workaroundDefault: "No confirmed workaround at this time.",
+            videoEvidenceLabel: "Video evidence", videoEvidencePlaceholder: "Paste a link to a short video showing the issue, or note that the video will be attached directly to GitHub or Discord.",
+            videoEvidenceHint: "Preferred when available. A clear video can make reproduction and verification easier.",
+            notesLabel: "Notes", notesPlaceholder: "Add confirmations, regression details, reference versions, or other context.",
+            filenamePrefix: "bug", reportType: "Bug Report"
+          },
+          feature: {
+            modeLabel: "Feature / compatibility request", generatorTitle: "Wingflex Feature and Compatibility Request Generator",
+            formAria: "Feature and compatibility request form", identificationTitle: "Request identification", titleLabel: "Request title",
+            titlePlaceholder: "[MSFS 2024] Add Combo Cube support for Example Aircraft",
+            titleGuide: "Title format: <code>[Platform] Concise feature or compatibility request</code>. Example: <code>[X-Plane 12] Add FCU Cube support for Example Aircraft</code>.",
+            titleHint: "Naming convention: [Platform] Concise feature or compatibility request.",
+            supportingMediaGuide: "Include documentation, developer references, screenshots, or videos that help explain the requested support.",
+            environmentTitle: "Target environment", status: "Feature or compatibility request submitted by user. Pinging @skylarkning for review.", detailsTitle: "Request details",
+            issueLabel: "Requested feature or compatibility", issuePlaceholder: "Describe the feature, aircraft, add-on, simulator, or compatibility support you are requesting.",
+            stepsLabel: "Current workflow or limitation", stepsPlaceholder: "Describe the current workflow, limitation, or missing functionality that led to this request.",
+            stepsHint: "Explain what users currently need to do and where the limitation occurs.", expectedLabel: "Desired result", expectedPlaceholder: "Describe how the requested support should work.",
+            actualLabel: "Current result or behavior", actualPlaceholder: "Describe the current behavior or state of compatibility.",
+            workaroundLabel: "Current workaround or alternative", workaroundPlaceholder: "Describe any current workaround or alternative, or enter None.",
+            workaroundDefault: "No current workaround or alternative.", videoEvidenceLabel: "Supporting media or documentation",
+            videoEvidencePlaceholder: "Paste links to documentation, screenshots, videos, SDK details, or other supporting material.",
+            videoEvidenceHint: "Optional, but supporting technical information can help us evaluate the request.", notesLabel: "Additional context",
+            notesPlaceholder: "Add demand, use cases, developer contact information, or other useful context.", filenamePrefix: "feature_request",
+            reportType: "Feature / Compatibility Request"
+          }
+        },
+        sections: {
+          requestType: "Request Type", reporter: "Reporter Username", date: "Report Date", status: "Status", product: "Product",
+          bridge: "Bridge Version", firmware: "Firmware Version", simulator: "Simulator", aircraft: "Aircraft/Add-on",
+          developer: "Aircraft/Add-on Developer Website", specs: "System Specs", issue: "Issue", steps: "Steps to Reproduce",
+          expected: "Expected Result", actual: "Actual Result", workaround: "Workaround", requested: "Requested Feature or Compatibility",
+          currentWorkflow: "Current Workflow or Limitation", desired: "Desired Result", currentResult: "Current Result or Behavior",
+          currentWorkaround: "Current Workaround or Alternative", video: "Video Evidence", supporting: "Supporting Media or Documentation",
+          notes: "Notes", context: "Additional Context"
+        },
+        fallback: {
+          issue: "Describe the issue.", steps: "1. Add reproduction steps.", expected: "Describe the expected result.", actual: "Describe the actual result.",
+          requested: "Describe the requested support.", currentWorkflow: "Describe the current limitation.", desired: "Describe the desired result.", currentResult: "Describe the current behavior."
+        },
+        messages: {
+          required: "Please complete the required fields.", copied: "Copied to clipboard.", copyFailed: "Copy failed. Select the preview manually.",
+          generated: "Markdown generated.", downloaded: "Downloaded {filename}.", emailBody: "Please attach {filename} to this email.",
+          communityCopied: "Copied. Open Discord and paste it into #bridge-bug-tracker."
+        }
       },
-      feature: {
-        modeLabel: "Feature / compatibility request",
-        generatorTitle: "Wingflex Feature and Compatibility Request Generator",
-        formAria: "Feature and compatibility request form",
-        identificationTitle: "Request identification",
-        titleLabel: "Request title",
-        titlePlaceholder: "[MSFS 2024] Add Combo Cube support for Example Aircraft",
-        titleGuide: "Title format: <code>[Platform] Concise feature or compatibility request</code>. Example: <code>[X-Plane 12] Add FCU Cube support for Example Aircraft</code>.",
-        titleHint: "Naming convention: [Platform] Concise feature or compatibility request.",
-        supportingMediaGuide: "Include documentation, developer references, screenshots, or videos that help explain the requested support.",
-        environmentTitle: "Target environment",
-        status: "Feature or compatibility request submitted by user. Pinging @skylarkning for review.",
-        detailsTitle: "Request details",
-        issueLabel: "Requested feature or compatibility",
-        issuePlaceholder: "Describe the feature, aircraft, add-on, simulator, or compatibility support you are requesting.",
-        stepsLabel: "Current workflow or limitation",
-        stepsPlaceholder: "Describe the current workflow, limitation, or missing functionality that led to this request.",
-        stepsHint: "Explain what users currently need to do and where the limitation occurs.",
-        expectedLabel: "Desired result",
-        expectedPlaceholder: "Describe how the requested support should work.",
-        actualLabel: "Current result or behavior",
-        actualPlaceholder: "Describe the current behavior or state of compatibility.",
-        workaroundLabel: "Current workaround or alternative",
-        workaroundPlaceholder: "Describe any current workaround or alternative, or enter None.",
-        workaroundDefault: "No current workaround or alternative.",
-        videoEvidenceLabel: "Supporting media or documentation",
-        videoEvidencePlaceholder: "Paste links to documentation, screenshots, videos, SDK details, or other supporting material.",
-        videoEvidenceHint: "Optional, but supporting technical information can help us evaluate the request.",
-        notesLabel: "Additional context",
-        notesPlaceholder: "Add demand, use cases, developer contact information, or other useful context.",
-        filenamePrefix: "feature_request",
-        reportType: "Feature / Compatibility Request"
+      zh: {
+        documentTitle: "Wingflex 问题报告生成器",
+        description: "生成标准化的 Wingflex 问题与功能兼容性请求 Markdown。",
+        procedureHtml: `
+          <h1 id="procedureTitle">继续前请仔细阅读</h1>
+          <p>确认以下流程后填写表单，然后复制生成的 Markdown。请务必<strong>只选择一个渠道提交</strong>：前往 <a href="https://github.com/wingflexsim/Bridge-Software/issues" target="_blank" rel="noopener noreferrer">Wingflex Bridge Software Issues 页面</a>，点击 <strong>New issue</strong> 并将 Markdown 粘贴到问题描述中；或者加入 QQ 群：<strong>176129613</strong>，将 Markdown 发送到群内。</p>
+          <h2>功能与兼容性请求</h2>
+          <p>最新兼容性列表请访问 <a href="https://www.wingflex.com/" target="_blank" rel="noopener noreferrer">wingflex.com</a>，并查看对应产品的商品页面。如需申请支持其他机型、插件、模拟器或功能，请选择下方的<strong>提交功能/兼容性请求</strong>。</p>
+          <p class="procedure-warning"><strong>怀疑是硬件问题？</strong>请不要填写此表单。请加入 QQ 群：<strong>176129613</strong>，直接联系 Wingflex 支持。</p>
+          <h2>提交前先检查已有报告</h2>
+          <p>提交前，请在 <a href="https://github.com/wingflexsim/Bridge-Software/issues" target="_blank" rel="noopener noreferrer">wingflexsim/Bridge-Software 已有问题</a>中搜索相同或相近的问题。</p>
+          <p class="procedure-warning"><strong>如果已经存在相同或相关报告，请勿重复提交。</strong>重复报告会拖慢处理流程。请在已有问题下补充有用的新信息。</p>
+          <h2>没有 GitHub 账号？</h2>
+          <p>完成表单后下载生成的 Markdown 文件，并发送到 QQ 群：<strong>176129613</strong>。也可以发送邮件至 <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>，邮件主题使用您填写的报告标题，并附上 Markdown 文件。问题文件名为 <code>bug_username_date.md</code>，功能请求文件名为 <code>feature_request_username_date.md</code>。</p>
+          <div class="procedure-action"><button class="button primary" type="button" id="bugModeButton">提交问题报告</button><button class="button success" type="button" id="featureModeButton">提交功能/兼容性请求</button></div>`,
+        static: {
+          usernameLabel: "用户名", usernamePlaceholder: "您的 GitHub、QQ 或常用用户名",
+          reportDateLabel: "报告日期", reportDateHint: "请使用日历选择日期。", statusLabel: "状态", productLabel: "产品",
+          bridgeVersionLabel: "Bridge 版本", bridgeVersionPlaceholder: "例如：V3.0.0.1-Hotfix", firmwareVersionLabel: "固件版本",
+          simulatorLabel: "模拟器", aircraftLabel: "机型 / 插件", systemSpecsLabel: "电脑配置",
+          systemSpecsPlaceholder: "例如：Ryzen 7 7800X3D、RX 9700 XT、32GB DDR5", systemSpecsHint: "选填，留空则不生成此部分。",
+          developerWebsiteLabel: "机型/插件开发者网站", developerWebsiteHint: "请提供机型或插件开发者的官方网站链接。",
+          customProductPlaceholder: "请输入产品名称", customFirmwarePlaceholder: "请输入固件版本",
+          customSimulatorPlaceholder: "请输入模拟器名称", customAircraftPlaceholder: "请输入机型或插件名称",
+          generateButton: "生成 Markdown", copyButton: "复制 Markdown", fileIssueButton: "提交到 GitHub",
+          communityButton: "发送到 QQ 群 176129613", downloadButton: "下载 Markdown", emailButton: "发送邮件",
+          resetButton: "重置", previewTitle: "生成的 Markdown", previewAria: "Markdown 预览",
+          footer: "带星号的项目为必填项。输入内容时，Markdown 会自动更新。"
+        },
+        options: {
+          productEmpty: "请选择产品…", productCustom: "其他…", firmwareLatest: "最新固件",
+          firmwarePersists: "已升级固件，但问题仍然存在。", unknown: "不确定", custom: "自定义…",
+          simulatorEmpty: "请选择模拟器…", aircraftEmpty: "请选择机型或插件…", stockAircraft: "默认 / 原生机型",
+          airbus: "── 空客 ──", boeing: "── 波音 ──", business: "── 商务机 / 通用航空 ──", regional: "── 支线 / 其他 ──"
+        },
+        modes: {
+          bug: {
+            modeLabel: "问题报告", generatorTitle: "Wingflex 问题报告生成器", formAria: "问题报告表单",
+            identificationTitle: "问题信息", titleLabel: "问题标题", titlePlaceholder: "[MSFS 2024] Combo Cube 断电后显示屏未熄灭",
+            titleGuide: "标题格式：<code>[平台] 简明的问题描述</code>。例如：<code>[MSFS 2024] FCU VS 旋钮拉出无响应</code>。",
+            titleHint: "命名格式：[平台] 简明的问题描述。", supportingMediaGuide: "建议附上能清楚展示问题的短视频，以便更快复现和确认。",
+            environmentTitle: "运行环境", status: "用户提交的问题报告，@skylarkning 请协助验证。", detailsTitle: "问题详情",
+            issueLabel: "问题描述", issuePlaceholder: "请说明发生了什么、出现问题的时机以及受影响的功能。",
+            stepsLabel: "复现步骤", stepsPlaceholder: "1. 启动模拟器。\n2. 加载受影响的机型。\n3. 打开 Wings Bridge。\n4. 连接设备。\n5. 执行出现问题的操作。\n6. 观察结果。",
+            stepsHint: "编号步骤会自动保留。", expectedLabel: "预期结果", expectedPlaceholder: "请说明正常情况下应该发生什么。",
+            actualLabel: "实际结果", actualPlaceholder: "请说明实际发生了什么。", workaroundLabel: "临时解决方法",
+            workaroundPlaceholder: "目前没有确认有效的临时解决方法。", workaroundDefault: "目前没有确认有效的临时解决方法。",
+            videoEvidenceLabel: "视频证据", videoEvidencePlaceholder: "请粘贴展示问题的短视频链接，或注明视频将直接发送到 GitHub 或 QQ 群。",
+            videoEvidenceHint: "建议提供。清晰的视频有助于复现和确认问题。", notesLabel: "备注",
+            notesPlaceholder: "请补充确认信息、版本回退情况、参考版本或其他背景。", filenamePrefix: "bug", reportType: "问题报告"
+          },
+          feature: {
+            modeLabel: "功能 / 兼容性请求", generatorTitle: "Wingflex 功能与兼容性请求生成器", formAria: "功能与兼容性请求表单",
+            identificationTitle: "请求信息", titleLabel: "请求标题", titlePlaceholder: "[MSFS 2024] 为示例机型增加 Combo Cube 支持",
+            titleGuide: "标题格式：<code>[平台] 简明的功能或兼容性请求</code>。例如：<code>[X-Plane 12] 为示例机型增加 FCU Cube 支持</code>。",
+            titleHint: "命名格式：[平台] 简明的功能或兼容性请求。", supportingMediaGuide: "请提供有助于说明请求的文档、开发者资料、截图或视频。",
+            environmentTitle: "目标环境", status: "用户提交的功能或兼容性请求，@skylarkning 请审核。", detailsTitle: "请求详情",
+            issueLabel: "所需功能或兼容性", issuePlaceholder: "请描述您希望支持的功能、机型、插件、模拟器或兼容性。",
+            stepsLabel: "当前流程或限制", stepsPlaceholder: "请描述当前流程、限制或缺少的功能，以及提出此请求的原因。",
+            stepsHint: "请说明用户目前需要如何操作，以及限制出现在哪里。", expectedLabel: "期望结果", expectedPlaceholder: "请说明希望该支持如何运作。",
+            actualLabel: "当前结果或状态", actualPlaceholder: "请描述当前行为或兼容性状态。", workaroundLabel: "当前替代方案",
+            workaroundPlaceholder: "请描述当前替代方案，如没有请填写“无”。", workaroundDefault: "目前没有替代方案。",
+            videoEvidenceLabel: "支持材料或文档", videoEvidencePlaceholder: "请粘贴文档、截图、视频、SDK 资料或其他支持材料的链接。",
+            videoEvidenceHint: "选填，但技术资料有助于评估请求。", notesLabel: "其他信息",
+            notesPlaceholder: "请补充需求量、使用场景、开发者联系方式或其他有用信息。", filenamePrefix: "feature_request",
+            reportType: "功能 / 兼容性请求"
+          }
+        },
+        sections: {
+          requestType: "请求类型", reporter: "报告人用户名", date: "报告日期", status: "状态", product: "产品",
+          bridge: "Bridge 版本", firmware: "固件版本", simulator: "模拟器", aircraft: "机型/插件",
+          developer: "机型/插件开发者网站", specs: "电脑配置", issue: "问题描述", steps: "复现步骤",
+          expected: "预期结果", actual: "实际结果", workaround: "临时解决方法", requested: "所需功能或兼容性",
+          currentWorkflow: "当前流程或限制", desired: "期望结果", currentResult: "当前结果或状态",
+          currentWorkaround: "当前替代方案", video: "视频证据", supporting: "支持材料或文档", notes: "备注", context: "其他信息"
+        },
+        fallback: {
+          issue: "请描述问题。", steps: "1. 请添加复现步骤。", expected: "请描述预期结果。", actual: "请描述实际结果。",
+          requested: "请描述所需支持。", currentWorkflow: "请描述当前限制。", desired: "请描述期望结果。", currentResult: "请描述当前状态。"
+        },
+        messages: {
+          required: "请填写所有必填项。", copied: "已复制到剪贴板。", copyFailed: "复制失败，请手动选择并复制预览内容。",
+          generated: "Markdown 已生成。", downloaded: "已下载 {filename}。", emailBody: "请将 {filename} 作为附件添加到此邮件。",
+          communityCopied: "Markdown 已复制。请加入 QQ 群 176129613，并将内容粘贴发送到群内。"
+        }
       }
     };
 
+    const customMappings = [
+      ["product", "customProduct"], ["firmwareVersion", "customFirmwareVersion"],
+      ["simulator", "customSimulator"], ["aircraft", "customAircraft"]
+    ];
+
     const now = new Date();
-    const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 10);
+    const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
     reportDateInput.value = localToday;
     reportDateInput.defaultValue = localToday;
 
+    function locale() {
+      return translations[currentLanguage];
+    }
+
+    function setText(id, text) {
+      document.getElementById(id).textContent = text;
+    }
+
+    function setOptionText(selectId, value, text) {
+      const option = [...document.getElementById(selectId).options].find((item) => item.value === value);
+      if (option) {
+        option.value = value;
+        option.textContent = text;
+      }
+    }
+
+    function applyLanguage(language) {
+      currentLanguage = language;
+      const t = locale();
+      const s = t.static;
+      document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
+      document.title = t.documentTitle;
+      document.querySelector('meta[name="description"]').content = t.description;
+      procedureCard.innerHTML = t.procedureHtml;
+
+      ["usernameLabel", "reportDateLabel", "reportDateHint", "statusLabel", "productLabel", "bridgeVersionLabel",
+        "firmwareVersionLabel", "simulatorLabel", "aircraftLabel", "systemSpecsLabel", "systemSpecsHint",
+        "developerWebsiteLabel", "developerWebsiteHint", "generateButton", "copyButton", "fileIssueButton",
+        "communityButton", "downloadButton", "emailButton", "resetButton", "previewTitle"].forEach((id) => setText(id, s[id]));
+
+      document.getElementById("username").placeholder = s.usernamePlaceholder;
+      document.getElementById("bridgeVersion").placeholder = s.bridgeVersionPlaceholder;
+      document.getElementById("systemSpecs").placeholder = s.systemSpecsPlaceholder;
+      document.getElementById("customProduct").placeholder = s.customProductPlaceholder;
+      document.getElementById("customProduct").setAttribute("aria-label", s.customProductPlaceholder);
+      document.getElementById("customFirmwareVersion").placeholder = s.customFirmwarePlaceholder;
+      document.getElementById("customSimulator").placeholder = s.customSimulatorPlaceholder;
+      document.getElementById("customAircraft").placeholder = s.customAircraftPlaceholder;
+      document.getElementById("previewCard").setAttribute("aria-label", s.previewAria);
+      setText("footerNote", s.footer);
+
+      const o = t.options;
+      setOptionText("product", "", o.productEmpty);
+      setOptionText("product", "Custom", o.productCustom);
+      setOptionText("firmwareVersion", "Latest firmware", o.firmwareLatest);
+      setOptionText("firmwareVersion", "Firmware upgraded, but issue persists.", o.firmwarePersists);
+      setOptionText("firmwareVersion", "Unknown", o.unknown);
+      setOptionText("firmwareVersion", "Custom", o.custom);
+      setOptionText("simulator", "", o.simulatorEmpty);
+      setOptionText("simulator", "Custom", o.custom);
+      setOptionText("aircraft", "", o.aircraftEmpty);
+      setOptionText("aircraft", "Default / Stock Aircraft", o.stockAircraft);
+      setOptionText("aircraft", "── Airbus ──", o.airbus);
+      setOptionText("aircraft", "── Boeing ──", o.boeing);
+      setOptionText("aircraft", "── Business / General Aviation ──", o.business);
+      setOptionText("aircraft", "── Regional / Other ──", o.regional);
+      setOptionText("aircraft", "Custom", o.custom);
+
+      document.getElementById("bugModeButton").addEventListener("click", () => startReport("bug"));
+      document.getElementById("featureModeButton").addEventListener("click", () => startReport("feature"));
+      languagePage.hidden = true;
+      procedurePage.hidden = false;
+      updateSubmissionDetails();
+    }
+
     function setReportMode(mode) {
       reportMode = mode;
-      const content = modeContent[mode];
+      const content = locale().modes[mode];
       const isFeatureRequest = mode === "feature";
       const workaround = document.getElementById("workaround");
-      const priorDefaults = Object.values(modeContent).map((item) => item.workaroundDefault);
+      const allDefaults = Object.values(translations).flatMap((translation) =>
+        Object.values(translation.modes).map((item) => item.workaroundDefault)
+      );
 
-      document.getElementById("modeLabel").textContent = content.modeLabel;
-      document.getElementById("generatorTitle").textContent = content.generatorTitle;
+      setText("modeLabel", content.modeLabel);
+      setText("generatorTitle", content.generatorTitle);
       document.getElementById("reportFormCard").setAttribute("aria-label", content.formAria);
-      document.getElementById("identificationTitle").textContent = content.identificationTitle;
-      document.getElementById("titleLabel").textContent = content.titleLabel;
+      setText("identificationTitle", content.identificationTitle);
+      setText("titleLabel", content.titleLabel);
       document.getElementById("title").placeholder = content.titlePlaceholder;
       document.getElementById("titleGuide").innerHTML = content.titleGuide;
-      document.getElementById("titleHint").textContent = content.titleHint;
-      document.getElementById("supportingMediaGuide").textContent = content.supportingMediaGuide;
-      document.getElementById("environmentTitle").textContent = content.environmentTitle;
+      setText("titleHint", content.titleHint);
+      setText("supportingMediaGuide", content.supportingMediaGuide);
+      setText("environmentTitle", content.environmentTitle);
       statusOption.value = content.status;
       statusOption.textContent = content.status;
-      document.getElementById("detailsTitle").textContent = content.detailsTitle;
+      setText("detailsTitle", content.detailsTitle);
 
       ["issue", "steps", "expected", "actual", "workaround", "videoEvidence", "notes"].forEach((fieldId) => {
-        document.getElementById(`${fieldId}Label`).textContent = content[`${fieldId}Label`];
+        setText(`${fieldId}Label`, content[`${fieldId}Label`]);
         document.getElementById(fieldId).placeholder = content[`${fieldId}Placeholder`];
       });
+      setText("stepsHint", content.stepsHint);
+      setText("videoEvidenceHint", content.videoEvidenceHint);
 
-      document.getElementById("stepsHint").textContent = content.stepsHint;
-      document.getElementById("videoEvidenceHint").textContent = content.videoEvidenceHint;
-
-      if (!workaround.value.trim() || priorDefaults.includes(workaround.value.trim())) {
+      if (!workaround.value.trim() || allDefaults.includes(workaround.value.trim())) {
         workaround.value = content.workaroundDefault;
         workaround.defaultValue = content.workaroundDefault;
       }
 
       developerWebsiteField.hidden = !isFeatureRequest;
       developerWebsiteInput.required = isFeatureRequest;
-      if (!isFeatureRequest) {
-        developerWebsiteInput.classList.remove("invalid");
-      }
-
+      if (!isFeatureRequest) developerWebsiteInput.classList.remove("invalid");
       updateSubmissionDetails();
       generateMarkdown(false);
     }
@@ -989,34 +1194,16 @@
       window.setTimeout(() => document.getElementById("title").focus(), 250);
     }
 
-    document.getElementById("bugModeButton").addEventListener("click", () => startReport("bug"));
-    document.getElementById("featureModeButton").addEventListener("click", () => startReport("feature"));
-
-    const customMappings = [
-      ["product", "customProduct"],
-      ["firmwareVersion", "customFirmwareVersion"],
-      ["simulator", "customSimulator"],
-      ["aircraft", "customAircraft"]
-    ];
-
     function setupCustomSelect(selectId, customId) {
       const select = document.getElementById(selectId);
       const custom = document.getElementById(customId);
-
       function updateVisibility() {
         const show = select.value === "Custom";
         custom.classList.toggle("visible", show);
         custom.required = show;
-        if (!show) {
-          custom.classList.remove("invalid");
-        }
+        if (!show) custom.classList.remove("invalid");
       }
-
-      select.addEventListener("change", () => {
-        updateVisibility();
-        generateMarkdown(false);
-      });
-
+      select.addEventListener("change", () => { updateVisibility(); generateMarkdown(false); });
       custom.addEventListener("input", () => generateMarkdown(false));
       updateVisibility();
     }
@@ -1028,7 +1215,17 @@
       if (select.value === "Custom") {
         return document.getElementById(customId).value.trim();
       }
-      return select.value.trim();
+      const value = select.value.trim();
+      if (currentLanguage !== "zh") {
+        return value;
+      }
+      const localizedValues = {
+        "Latest firmware": locale().options.firmwareLatest,
+        "Firmware upgraded, but issue persists.": locale().options.firmwarePersists,
+        "Unknown": locale().options.unknown,
+        "Default / Stock Aircraft": locale().options.stockAircraft
+      };
+      return localizedValues[value] || value;
     }
 
     function cleanText(value) {
@@ -1040,36 +1237,34 @@
     }
 
     function safeFilenamePart(value, fallback) {
-      const safeValue = value
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9_-]+/g, "_")
-        .replace(/^_+|_+$/g, "");
+      const safeValue = value.trim().toLowerCase().replace(/[^a-z0-9_-]+/g, "_").replace(/^_+|_+$/g, "");
       return safeValue || fallback;
     }
 
     function markdownFilename() {
       const username = safeFilenamePart(document.getElementById("username").value, "username");
       const reportDate = safeFilenamePart(reportDateInput.value, "date");
-      return `${modeContent[reportMode].filenamePrefix}_${username}_${reportDate}.md`;
+      return `${locale().modes[reportMode].filenamePrefix}_${username}_${reportDate}.md`;
     }
 
     function updateSubmissionDetails() {
+      const t = locale();
       const title = cleanText(document.getElementById("title").value);
       const filename = markdownFilename();
       const subject = encodeURIComponent(title);
-      const body = encodeURIComponent(`Please attach ${filename} to this email.`);
-
-      downloadFilename.textContent = filename;
+      const body = encodeURIComponent(t.messages.emailBody.replace("{filename}", filename));
       emailButton.href = `mailto:skyning@wingflexsim.com?subject=${subject}&body=${body}`;
+      document.getElementById("emailNote").innerHTML = currentLanguage === "zh"
+        ? `没有 GitHub 账号？请下载 <strong id="downloadFilename">${filename}</strong> 并发送到 QQ 群：<strong>176129613</strong>；也可以邮件发送至 <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>，使用报告标题作为主题并附上 Markdown 文件。`
+        : `No GitHub or Discord account? Download <strong id="downloadFilename">${filename}</strong>, email it to <a href="mailto:skyning@wingflexsim.com">skyning@wingflexsim.com</a>, use your report title as the subject, and attach the Markdown file.`;
     }
 
     function generateMarkdown(validate = true) {
+      const t = locale();
       if (validate && !validateForm()) {
-        copyStatus.textContent = "Please complete the required fields.";
+        copyStatus.textContent = t.messages.required;
         return "";
       }
-
       copyStatus.textContent = "";
 
       const title = cleanText(document.getElementById("title").value);
@@ -1090,53 +1285,39 @@
       const workaround = cleanText(document.getElementById("workaround").value);
       const videoEvidence = cleanText(document.getElementById("videoEvidence").value);
       const notes = cleanText(document.getElementById("notes").value);
-
+      const content = t.modes[reportMode];
+      const s = t.sections;
+      const f = t.fallback;
       const parts = [];
 
-      if (title) {
-        parts.push(`# ${title}`);
-      }
-
-      const content = modeContent[reportMode];
-      parts.push(section("Request Type", content.reportType));
-      parts.push(section("Reporter Username", username || "N/A"));
-      parts.push(section("Report Date", reportDate || "N/A"));
-      parts.push(section("Status", status || content.status));
-      parts.push(section("Product", product || "N/A"));
-      parts.push(section("Bridge Version", bridgeVersion || "N/A"));
-      parts.push(section("Firmware Version", firmwareVersion || "N/A"));
-      parts.push(section("Simulator", simulator || "N/A"));
-      parts.push(section("Aircraft/Add-on", aircraft || "N/A"));
+      if (title) parts.push(`# ${title}`);
+      parts.push(section(s.requestType, content.reportType));
+      parts.push(section(s.reporter, username || "N/A"));
+      parts.push(section(s.date, reportDate || "N/A"));
+      parts.push(section(s.status, status || content.status));
+      parts.push(section(s.product, product || "N/A"));
+      parts.push(section(s.bridge, bridgeVersion || "N/A"));
+      parts.push(section(s.firmware, firmwareVersion || "N/A"));
+      parts.push(section(s.simulator, simulator || "N/A"));
+      parts.push(section(s.aircraft, aircraft || "N/A"));
+      if (reportMode === "feature") parts.push(section(s.developer, developerWebsite || "N/A"));
+      if (systemSpecs) parts.push(section(s.specs, systemSpecs));
 
       if (reportMode === "feature") {
-        parts.push(section("Aircraft/Add-on Developer Website", developerWebsite || "N/A"));
-      }
-
-      if (systemSpecs) {
-        parts.push(section("System Specs", systemSpecs));
-      }
-
-      if (reportMode === "feature") {
-        parts.push(section("Requested Feature or Compatibility", issue || "Describe the requested support."));
-        parts.push(section("Current Workflow or Limitation", steps || "Describe the current limitation."));
-        parts.push(section("Desired Result", expected || "Describe the desired result."));
-        parts.push(section("Current Result or Behavior", actual || "Describe the current behavior."));
-        parts.push(section("Current Workaround or Alternative", workaround || content.workaroundDefault));
+        parts.push(section(s.requested, issue || f.requested));
+        parts.push(section(s.currentWorkflow, steps || f.currentWorkflow));
+        parts.push(section(s.desired, expected || f.desired));
+        parts.push(section(s.currentResult, actual || f.currentResult));
+        parts.push(section(s.currentWorkaround, workaround || content.workaroundDefault));
       } else {
-        parts.push(section("Issue", issue || "Describe the issue."));
-        parts.push(section("Steps to Reproduce", steps || "1. Add reproduction steps."));
-        parts.push(section("Expected Result", expected || "Describe the expected result."));
-        parts.push(section("Actual Result", actual || "Describe the actual result."));
-        parts.push(section("Workaround", workaround || content.workaroundDefault));
+        parts.push(section(s.issue, issue || f.issue));
+        parts.push(section(s.steps, steps || f.steps));
+        parts.push(section(s.expected, expected || f.expected));
+        parts.push(section(s.actual, actual || f.actual));
+        parts.push(section(s.workaround, workaround || content.workaroundDefault));
       }
-
-      if (videoEvidence) {
-        parts.push(section(reportMode === "feature" ? "Supporting Media or Documentation" : "Video Evidence", videoEvidence));
-      }
-
-      if (notes) {
-        parts.push(section(reportMode === "feature" ? "Additional Context" : "Notes", notes));
-      }
+      if (videoEvidence) parts.push(section(reportMode === "feature" ? s.supporting : s.video, videoEvidence));
+      if (notes) parts.push(section(reportMode === "feature" ? s.context : s.notes, notes));
 
       const markdown = parts.join("\n\n");
       output.textContent = markdown;
@@ -1145,39 +1326,21 @@
 
     function validateForm() {
       let valid = true;
-      const requiredElements = [...form.querySelectorAll("[required]")];
-
-      requiredElements.forEach((element) => {
-        const isHiddenCustom = element.classList.contains("custom-field") &&
-          !element.classList.contains("visible");
-        if (isHiddenCustom) {
-          element.classList.remove("invalid");
-          return;
-        }
-
-        if (!element.value.trim()) {
-          element.classList.add("invalid");
-          valid = false;
-        } else {
-          element.classList.remove("invalid");
-        }
+      [...form.querySelectorAll("[required]")].forEach((element) => {
+        const hiddenCustom = element.classList.contains("custom-field") && !element.classList.contains("visible");
+        if (hiddenCustom) { element.classList.remove("invalid"); return; }
+        const empty = !element.value.trim();
+        element.classList.toggle("invalid", empty);
+        if (empty) valid = false;
       });
-
-      if (!valid) {
-        const firstInvalid = form.querySelector(".invalid");
-        firstInvalid?.focus();
-      }
-
+      if (!valid) form.querySelector(".invalid")?.focus();
       return valid;
     }
 
-    async function copyMarkdown() {
-      const markdown = generateMarkdown(true);
-      if (!markdown) return;
-
+    async function writeClipboard(markdown) {
       try {
         await navigator.clipboard.writeText(markdown);
-        copyStatus.textContent = "Copied to clipboard.";
+        return true;
       } catch (error) {
         const temp = document.createElement("textarea");
         temp.value = markdown;
@@ -1187,78 +1350,74 @@
         temp.select();
         const copied = document.execCommand("copy");
         document.body.removeChild(temp);
-        copyStatus.textContent = copied
-          ? "Copied to clipboard."
-          : "Copy failed. Select the preview manually.";
+        return copied;
       }
+    }
 
-      window.setTimeout(() => {
-        copyStatus.textContent = "";
-      }, 2600);
+    async function copyMarkdown() {
+      const markdown = generateMarkdown(true);
+      if (!markdown) return false;
+      const copied = await writeClipboard(markdown);
+      copyStatus.textContent = copied ? locale().messages.copied : locale().messages.copyFailed;
+      window.setTimeout(() => { copyStatus.textContent = ""; }, 2600);
+      return copied;
     }
 
     function downloadMarkdownFile() {
       const markdown = generateMarkdown(true);
       if (!markdown) return;
-
       const filename = markdownFilename();
       const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-
       link.href = url;
       link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-
-      copyStatus.textContent = `Downloaded ${filename}.`;
-      window.setTimeout(() => {
-        copyStatus.textContent = "";
-      }, 3000);
+      copyStatus.textContent = locale().messages.downloaded.replace("{filename}", filename);
+      window.setTimeout(() => { copyStatus.textContent = ""; }, 3000);
     }
 
-    form.addEventListener("input", () => {
-      generateMarkdown(false);
-      updateSubmissionDetails();
-    });
-
+    document.getElementById("englishButton").addEventListener("click", () => applyLanguage("en"));
+    document.getElementById("chineseButton").addEventListener("click", () => applyLanguage("zh"));
+    form.addEventListener("input", () => { generateMarkdown(false); updateSubmissionDetails(); });
     document.getElementById("generateButton").addEventListener("click", () => {
       const markdown = generateMarkdown(true);
       if (markdown) {
         output.scrollTop = 0;
-        copyStatus.textContent = "Markdown generated.";
-        window.setTimeout(() => {
-          copyStatus.textContent = "";
-        }, 1800);
+        copyStatus.textContent = locale().messages.generated;
+        window.setTimeout(() => { copyStatus.textContent = ""; }, 1800);
       }
     });
-
     document.getElementById("copyButton").addEventListener("click", copyMarkdown);
     document.getElementById("downloadButton").addEventListener("click", downloadMarkdownFile);
-
-    emailButton.addEventListener("click", (event) => {
-      if (!generateMarkdown(true)) {
-        event.preventDefault();
+    communityButton.addEventListener("click", async () => {
+      const markdown = generateMarkdown(true);
+      if (!markdown) return;
+      if (currentLanguage === "en") {
+        window.open("https://discord.gg/pJCWPc2Gzu", "_blank", "noopener,noreferrer");
         return;
       }
+      const copied = await writeClipboard(markdown);
+      copyStatus.textContent = copied ? locale().messages.communityCopied : locale().messages.copyFailed;
+    });
+    emailButton.addEventListener("click", (event) => {
+      if (!generateMarkdown(true)) { event.preventDefault(); return; }
       updateSubmissionDetails();
     });
-
     form.addEventListener("reset", () => {
       window.setTimeout(() => {
-        customMappings.forEach(([selectId, customId]) => {
+        customMappings.forEach(([, customId]) => {
           document.getElementById(customId).classList.remove("visible", "invalid");
           document.getElementById(customId).required = false;
         });
-        [...form.querySelectorAll(".invalid")].forEach((el) => el.classList.remove("invalid"));
+        [...form.querySelectorAll(".invalid")].forEach((element) => element.classList.remove("invalid"));
         copyStatus.textContent = "";
         setReportMode(reportMode);
       }, 0);
     });
-
-    setReportMode("bug");
   </script>
 </body>
 </html>
